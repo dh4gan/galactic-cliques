@@ -23,6 +23,7 @@ class galaxy(object):
         self.ngroups= 0 # Total number of groups
         self.groupmax = 0 # Largest civilisation rank to start a group
         self.groupID = [] # For groups 1 to ngroups, this gives the civilisation that started the group
+        self.groupcount = [] # Population of each group from 1 to ngroups
         
         self.generate_empty_galaxy()
         
@@ -179,7 +180,8 @@ class galaxy(object):
                 if(sep>=0.0):
                     self.civs[j].groupleader = self.civs[i].groupleader
                 else:
-                    self.civs[j].groupleader = j+1
+                    # If this civilisation doesn't have a leader already, it becomes its own leader
+                    if(self.civs[j].groupleader==0):self.civs[j].groupleader = j+1
                     
                     
                 #print i, j, sep, self.civs[i].groupleader, self.civs[j].groupleader
@@ -201,18 +203,16 @@ class galaxy(object):
             
         # Now find the population of each group sorted by leader
         
-        grouptally = np.zeros(self.groupmax)
+        self.groupcount = np.zeros(self.groupmax)
         
         for civ in self.civs:
-            grouptally[civ.groupleader-1] +=1.0
-    
-        grouptally = np.asarray(grouptally)
+            self.groupcount[civ.groupleader-1] +=1.0            
         
         # Now calculate the number of groups with at least one member from grouptally
         
         self.ngroups = 0
-        for i in range(len(grouptally)):
-            if grouptally[i]>0: 
+        for i in range(len(self.groupcount)):
+            if self.groupcount[i]>0: 
                 self.ngroups+=1
                 self.groupID.append(i+1)
             
@@ -223,13 +223,11 @@ class galaxy(object):
         for civ in self.civs:
             # Find leader's entry in groupID array
             civ.grouprank = np.nonzero(self.groupID==civ.groupleader)
-            civ.grouprank = int(civ.grouprank[0])+1
-            print civ.grouprank, civ.groupleader
+            civ.grouprank = int(civ.grouprank[0])+1            
             
-        # Want just the active groups (no zeros)                
+        # Remove all entries with zero counts
+        self.groupcount = self.groupcount[np.nonzero(self.groupcount)]
         
-        return grouptally[np.nonzero(grouptally)] 
-    
     def plot_spatial2D(self):
         '''
         This creates an x-y plot of the galaxy
@@ -281,4 +279,20 @@ class galaxy(object):
         ax.scatter(x, y)
         plt.show() 
         
+    def output_group_statistics(self, outputfile):
+        '''
+        Outputs statistical data on all groups
+        '''
+        
+        f_obj = open(outputfile,'w')
+        
+        print self.ngroups, len(self.groupID), len(self.groupcount)
+        
+        for i in range(self.ngroups):
+            print i
+            line = str(i)+'\t'+str(self.groupID[i]) + '\t'+str(self.civs[self.groupID[i]-1].tarise) + '\t' + str(self.groupcount[i]) + '\n'
+            
+            f_obj.write(line)
+            
+        f_obj.close()
             
