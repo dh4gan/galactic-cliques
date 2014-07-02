@@ -51,5 +51,5 @@ class civilisation(object):
         mag = d4x[0]*d4x[0] - mag
         
         return mag
-        
+            
         

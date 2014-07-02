@@ -82,11 +82,14 @@ class galaxy(object):
         for civ in self.civs:
             civ.tarise = tmin + np.random.random()*(tmax-tmin)                        
         
-    def generate_gaussian_arrival_time(self,tmin,tmax, mu,sigma):
+    def generate_gaussian_arrival_time(self,mu,sigma):
         '''
         Generates a gaussian distribution of civilisation arrival times
         Uses the accept-reject technique
         '''
+        
+        tmin = mu - 3.0*sigma
+        tmax = mu + 3.0*sigma
         
         for civ in self.civs:
             accept = False
@@ -99,8 +102,40 @@ class galaxy(object):
                 randtest = fmax*np.random.random()
                                 
                 if(randtest < f):
-                    accept=True                             
+                    accept=True           
+                    
+    def generate_gaussian_lifetimes(self,mu,sigma):
+        '''
+        Generates a gaussian distribution of civilisation arrival times
+        Uses the accept-reject technique
+        '''
         
+        tmin = mu - 3.0*sigma
+        tmax = mu + 3.0*sigma
+        
+        for civ in self.civs:
+            accept = False
+            while accept==False:
+                civ.lifetime = tmin + np.random.random()*(tmax-tmin)
+                fmax = 1.0/(2.0*np.pi*sigma)
+                
+                f = fmax*np.exp(-(civ.lifetime-mu)**2/(2.0*sigma)**2)
+                
+                randtest = fmax*np.random.random()
+                                
+                if(randtest < f):
+                    accept=True    
+                    
+                
+    def generate_fixed_lifetimes(self,life):
+        '''
+        Generates a gaussian distribution of civilisation arrival times
+        Uses the accept-reject technique
+        '''                    
+        
+        for civ in self.civs:
+            civ.lifetime = life
+                
     def arrival_time_histogram(self):
         '''
         Plots a histogram based on civilisation arrival times
@@ -171,20 +206,28 @@ class galaxy(object):
                 # Calculate magnitude of separation four vector 
                 sep = self.civs[i].sep_4vector_magnitude(self.civs[j])
                 
-                # This civilisation pair is causally connected if sep >=0.0
-                # j's group affiliation = i's group affiliation
+                # This civilisation pair is causally connected if sep >=0.0 and comm window open
+                # if connected: j's group affiliation = i's group affiliation
                 
-                # If separation less than zero, j not affiliated
+                # If disconnected, j not affiliated
                 # and therefore in its own group
+                                
+                # communication window open => tarise1 + lifetime >= tarise2
                 
+                dt = self.civs[i].tarise + self.civs[i].lifetime -self.civs[j].tarise
+                
+                if(dt<=0.0): sep=-10.0
+                
+            
                 if(sep>=0.0):
+                    
                     self.civs[j].groupleader = self.civs[i].groupleader
                 else:
                     # If this civilisation doesn't have a leader already, it becomes its own leader
                     if(self.civs[j].groupleader==0):self.civs[j].groupleader = j+1
                     
                     
-                #print i, j, sep, self.civs[i].groupleader, self.civs[j].groupleader
+                print i, j, sep,dt, self.civs[i].groupleader, self.civs[j].groupleader
                 
         print 'Group checking complete'
                 
@@ -288,9 +331,11 @@ class galaxy(object):
         
         print self.ngroups, len(self.groupID), len(self.groupcount)
         
+        line = '# Group No.  Leader  Arrival Time  Lifetime  Membership'
+        
         for i in range(self.ngroups):
             print i
-            line = str(i)+'\t'+str(self.groupID[i]) + '\t'+str(self.civs[self.groupID[i]-1].tarise) + '\t' + str(self.groupcount[i]) + '\n'
+            line = str(i)+'\t'+str(self.groupID[i]) + '\t'+str(self.civs[self.groupID[i]-1].tarise) + '\t'+str(self.civs[self.groupID[i]-1].lifetime) + '\t' + str(self.groupcount[i]) + '\n'
             
             f_obj.write(line)
             
