@@ -39,6 +39,18 @@ class civilisation(object):
         
         return d4x
     
+    def sep_3vector_magnitude(self,other):
+        '''calculates the magnitude of the separation 3 vector between two civilisations
+        '''
+        
+        dr = 0.0                
+        
+        for i in range(1,3):
+            dr = dr + (self.r[i-1] - other.r[i-1])**2
+        
+        dr = np.sqrt(dr)
+        return dr
+    
     def sep_4vector_magnitude(self,other):
         '''Calculates (cdt)^2 - (dr)^2 between two civilisations'''
         

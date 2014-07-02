@@ -44,9 +44,11 @@ myGalaxy.generate_fixed_lifetimes(mu_life)
 myGalaxy.sort_by_arrival_time()
 myGalaxy.check_for_groups()
 myGalaxy.count_groups()
+myGalaxy.get_group_sizes()
 
 print "There are ", myGalaxy.ngroups, " groups, with latest group established by civilisation ", myGalaxy.groupmax
-
+print "Counts: ", myGalaxy.groupcount
+print "Sizes: ", myGalaxy.groupsizes
 # Plot this galaxy and its groups
 
 myGalaxy.arrival_time_histogram()

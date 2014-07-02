@@ -227,7 +227,7 @@ class galaxy(object):
                     if(self.civs[j].groupleader==0):self.civs[j].groupleader = j+1
                     
                     
-                print i, j, sep,dt, self.civs[i].groupleader, self.civs[j].groupleader
+                #print i, j, sep,dt, self.civs[i].groupleader, self.civs[j].groupleader
                 
         print 'Group checking complete'
                 
@@ -271,10 +271,37 @@ class galaxy(object):
         # Remove all entries with zero counts
         self.groupcount = self.groupcount[np.nonzero(self.groupcount)]
         
+    def extract_group(self,rank):
+        '''
+        Returns the members of the nth group                        
+        '''
+        
+        civgroup =[]
+        
+        for civ in self.civs:
+            if(civ.grouprank==rank):
+                civgroup.append(civ)
+        return civgroup
+    
+    
+    def get_group_sizes(self):
+        
+        self.groupsizes = np.zeros(self.ngroups)
+        
+        for k in range(self.ngroups):
+            civgroup = self.extract_group(k)
+            
+            # Now calculate maximum separation
+            
+            for i in range(len(civgroup)):
+                for j in range(i+1,len(civgroup)):
+                    sep = civgroup[i].sep_3vector_magnitude(civgroup[j])
+                    if(sep>self.groupsizes[k]): self.groupsizes[k] = sep
+                    
+        
     def plot_spatial2D(self):
         '''
-        This creates an x-y plot of the galaxy
-        TODO - collect x,y data by group 
+        This creates an x-y plot of the galaxy        
         '''
                 
         x = []
@@ -327,16 +354,13 @@ class galaxy(object):
         Outputs statistical data on all groups
         '''
         
-        f_obj = open(outputfile,'w')
-        
-        print self.ngroups, len(self.groupID), len(self.groupcount)
+        f_obj = open(outputfile,'w')                
         
         line = '# Group No.  Leader  Arrival Time  Lifetime  Membership'
         
-        for i in range(self.ngroups):
-            print i
-            line = str(i)+'\t'+str(self.groupID[i]) + '\t'+str(self.civs[self.groupID[i]-1].tarise) + '\t'+str(self.civs[self.groupID[i]-1].lifetime) + '\t' + str(self.groupcount[i]) + '\n'
-            
+        for i in range(self.ngroups):            
+            line = str(i)+'\t'+str(self.groupID[i]) + '\t'+str(self.civs[self.groupID[i]-1].tarise) + '\t'+str(self.civs[self.groupID[i]-1].lifetime) + '\t' 
+            line = line + str(self.groupcount[i]) + '\t' + str(self.groupsizes[i]) + '\n'
             f_obj.write(line)
             
         f_obj.close()
