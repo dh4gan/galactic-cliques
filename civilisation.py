@@ -4,11 +4,9 @@
 
 import numpy as np
 
-c = 296.67 # lightspeed in kpc Myr
+c = 296.67 # lightspeed in kpc/Myr
 
-class civilisation(object):
-    
-    
+class civilisation(object):        
     
     '''
     Object that represents a star system hosting a civilisation
@@ -21,10 +19,10 @@ class civilisation(object):
         Constructor: cartesian position vector, arisal time, lifetime, group it is affiliated to
         '''
         self.r = pos # cartesian position vector
-        self.tarise = arise
-        self.lifetime = life
-        self.groupleader = leader
-        self.grouprank = rank
+        self.tarise = arise # arisal time
+        self.lifetime = life # lifetime
+        self.groupleader = leader # leader of group it is affiliated with
+        self.grouprank = rank # Order of group's appearance
         
     def separation_4vector(self,other):
         '''calculates the separation 4 vector between two civilisations

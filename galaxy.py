@@ -14,16 +14,17 @@ class galaxy(object):
     '''
 
 
-    def __init__(self, ncivs):
+    def __init__(self, ncivs, iseed):
         '''
         
         '''
-        self.N = ncivs
+        self.N = ncivs        
         self.civs = [] # Array to hold all civilisations
         self.ngroups= 0 # Total number of groups
         self.groupmax = 0 # Largest civilisation rank to start a group
         self.groupID = [] # For groups 1 to ngroups, this gives the civilisation that started the group
         self.groupcount = [] # Population of each group from 1 to ngroups
+        self.grouparrive = []
         
         self.generate_empty_galaxy()
         
@@ -65,9 +66,7 @@ class galaxy(object):
             
             r = np.exp(-rinner/rscale) - np.random.random()*sigma0
             r = -np.log(r)*rscale
-            
-            print r
-            #r = rinner + np.random.random()*(router-rinner)
+                                    
             phi = 2.0*np.pi*np.random.random()
             z = zmin + np.random.random()*(zmax-zmin)
             
@@ -258,8 +257,10 @@ class galaxy(object):
             if self.groupcount[i]>0: 
                 self.ngroups+=1
                 self.groupID.append(i+1)
+                self.grouparrive.append(self.civs[self.groupID[-1]-1].tarise)
             
         self.groupID = np.asarray(self.groupID)
+        
         
         # Finally, assign groupranks (first, second, third group in existence etc)
         
@@ -357,9 +358,10 @@ class galaxy(object):
         f_obj = open(outputfile,'w')                
         
         line = '# Group No.  Leader  Arrival Time  Lifetime  Membership'
+        f_obj.write(line)
         
         for i in range(self.ngroups):            
-            line = str(i)+'\t'+str(self.groupID[i]) + '\t'+str(self.civs[self.groupID[i]-1].tarise) + '\t'+str(self.civs[self.groupID[i]-1].lifetime) + '\t' 
+            line = str(i)+'\t'+str(self.groupID[i]) + '\t'+str(self.grouparrive[i]) + '\t'+str(self.civs[self.groupID[i]-1].lifetime) + '\t' 
             line = line + str(self.groupcount[i]) + '\t' + str(self.groupsizes[i]) + '\n'
             f_obj.write(line)
             
