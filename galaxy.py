@@ -312,7 +312,7 @@ class galaxy(object):
         colorchoice = []         
           
         for i in range(self.ngroups):            
-            colorchoice.append([np.random.random(), np.random.random(),np.random.random(),])            
+            colorchoice.append([np.random.random(), np.random.random(),np.random.random()])            
                           
         
         # Select colours for each group
@@ -324,31 +324,8 @@ class galaxy(object):
                 
         fig1 = plt.figure()
         ax = fig1.add_subplot(111)
-        ax.scatter(x, y, c=pointcolor)
-        #ax.scatter(x, y)
-        plt.show()  
-        
-    def plot_spatial2D_voronoi(self):
-        '''
-        This creates an x-y plot of the galaxy
-        And plots a voronoi tesselation
-        TODO - needs scipy better than 0.10.1
-        '''
-                
-        x = []
-        y = []
-        
-        for civ in self.civs:
-            x.append(civ.r[0])
-            y.append(civ.r[1])
-                
-        points = [x,y]
-
-        
-        fig1 = plt.figure()
-        ax = fig1.add_subplot(111)
-        ax.scatter(x, y)
-        plt.show() 
+        ax.scatter(x, y, c=pointcolor)        
+        plt.show()          
         
     def output_group_statistics(self, outputfile):
         '''
@@ -357,7 +334,7 @@ class galaxy(object):
         
         f_obj = open(outputfile,'w')                
         
-        line = '# Group No.  Leader  Arrival Time  Lifetime  Membership'
+        line = '# Group No.  Leader  Arrival Time  Lifetime  Membership \n'
         f_obj.write(line)
         
         for i in range(self.ngroups):            

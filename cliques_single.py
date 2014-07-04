@@ -3,26 +3,35 @@
 # Then calculates causally connected groups
 
 import galaxy as gal
+import params
 
 # Generate a galaxy of civilisations
 
-nciv = 500
-xmax = ymax = 5.0 
-zmax = 0.0
+# nciv = 500
+# xmax = ymax = 5.0 
+# zmax = 0.0
+# 
+# rinner = 6.0
+# router = 10.0
+# rscale = 3.0
+# 
+# zmin = 0.0
+# 
+# mu_life = 0.5
+# sigma_life = 1.0e-3
+# 
+# mu_t = 5000.0
+# sigma_t = 10.0
 
-rinner = 6.0
-router = 10.0
-rscale = 3.0
+paramfile = 'cliques_single.params'
 
-zmin = 0.0
+nciv, rinner,router,rscale, zmin,zmax, mu_life,sigma_life,mu_t,sigma_t = params.read_parameters_single(paramfile)
 
-mu_life = 0.5
-sigma_life = 1.0e-3
+print nciv, rinner,router,rscale, zmin,zmax, mu_life,sigma_life,mu_t,sigma_t
 
-mu_t = 5000.0
-sigma_t = 10.0
+iseed = -45
 
-myGalaxy = gal.galaxy(nciv)
+myGalaxy = gal.galaxy(nciv, iseed)
 
 # Spatial distribution of civilisations
 #myGalaxy.generate_uniform_spatial_distribution(xmax,ymax,zmax)
@@ -55,7 +64,7 @@ myGalaxy.arrival_time_histogram()
 myGalaxy.plot_spatial2D()
 
 # Write data to outputfile
-outputfile = 'single.output'
+outputfile = 'output.single'
 
 myGalaxy.output_group_statistics(outputfile)
 

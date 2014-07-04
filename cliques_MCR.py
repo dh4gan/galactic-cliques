@@ -4,29 +4,36 @@
 # Repeats this to allow MCR analysis
 
 import galaxy as gal
+import params
 import numpy as np
 import matplotlib.pyplot as plt
 
 # Parameters that are fixed for all runs
+# 
+# nruns = 30
+# iseed = -47
+# 
+# nciv = 500
+# 
+# rinner = 6.0
+# router = 10.0
+# rscale = 3.0
+# 
+# zmin = -3.0
+# zmax = 3.0
+# 
+# mu_life = 0.1
+# sigma_life = 1.0e-3
+# 
+# mu_t = 5000.0
+# sigma_t = 10.0
 
-nruns = 30
+paramfile = 'cliques_MCR.params'
+
+nruns,nciv, rinner,router,rscale, zmin,zmax, mu_life,sigma_life,mu_t,sigma_t = params.read_parameters_mcr(paramfile)
+
+print nciv, rinner,router,rscale, zmin,zmax, mu_life,sigma_life,mu_t,sigma_t
 iseed = -47
-
-nciv = 500
-
-rinner = 6.0
-router = 10.0
-rscale = 3.0
-
-zmin = -3.0
-zmax = 3.0
-
-mu_life = 0.1
-sigma_life = 1.0e-3
-
-mu_t = 5000.0
-sigma_t = 10.0
-
 
 # Now loop over runs
 
@@ -75,7 +82,7 @@ for irun in range(nruns):
     #myGalaxy.plot_spatial2D()
 
     # Write data to outputfile
-    outputfile = 'cliques.'+str(irun)
+    outputfile = 'output.'+str(irun)
 
     myGalaxy.output_group_statistics(outputfile)
     
