@@ -4,42 +4,30 @@
 
 import galaxy as gal
 import params
+from sys import argv
 
-# Generate a galaxy of civilisations
+# Read in input parameters from file
 
-# nciv = 500
-# xmax = ymax = 5.0 
-# zmax = 0.0
-# 
-# rinner = 6.0
-# router = 10.0
-# rscale = 3.0
-# 
-# zmin = 0.0
-# 
-# mu_life = 0.5
-# sigma_life = 1.0e-3
-# 
-# mu_t = 5000.0
-# sigma_t = 10.0
-
-paramfile = 'cliques_single.params'
+if len(argv)==1:
+    paramfile = raw_input("Enter the parameter file: ")
+elif len(argv)==2:
+    paramfile = argv[1]    
 
 nciv, rinner,router,rscale, zmin,zmax, mu_life,sigma_life,mu_t,sigma_t = params.read_parameters_single(paramfile)
 
-print nciv, rinner,router,rscale, zmin,zmax, mu_life,sigma_life,mu_t,sigma_t
-
 iseed = -45
+
+# Generate a galaxy of civilisations - start with empty galaxy
 
 myGalaxy = gal.galaxy(nciv, iseed)
 
-# Spatial distribution of civilisations
-#myGalaxy.generate_uniform_spatial_distribution(xmax,ymax,zmax)
+# Place civilisations in space
+
 myGalaxy.generate_uniform_GHZ(rinner, router, zmin, zmax)
 #myGalaxy.generate_exponential_GHZ(rinner, router,rscale, zmin, zmax)
 
+# Place civilisations in time
 
-# Distribution of civilisation arrival times
 #myGalaxy.generate_uniform_arrival_time(tmin, tmax)
 myGalaxy.generate_gaussian_arrival_time(mu_t,sigma_t)
 

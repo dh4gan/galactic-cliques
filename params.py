@@ -2,17 +2,24 @@
 # Reads in data from parameters file
 
 def read_parameters_single(paramfile):
+    '''
+    Reads in parameters for cliques_single.py
+    '''
         
     rowdict = {'nCivilisations':0.0,'innerGHZ':0.0,'outerGHZ':0.0,'rScale':0.0,'zMin':0.0, 'Zmax':0.0,
             'meanLifetime':0.0,'sdLifetime':0.0,'meanArrival':0.0,'sdArrival':0.0}
         
+    print '---'
     for line in open(paramfile,'r'):
         
         data = line.split()
         key = data[0]
         
-        rowdict[key] = data[1]            
+        rowdict[key] = data[1]      
+        print key,' \t',rowdict[key]      
         
+    print '---'
+    
     nciv = int(rowdict['nCivilisations'])
     rinner = float(rowdict['innerGHZ'])
     router = float(rowdict['outerGHZ'])
@@ -29,18 +36,24 @@ def read_parameters_single(paramfile):
     
     
 def read_parameters_mcr(paramfile):
-    # TODO
+    '''
+    Reads in parameters for cliques_MCR.py (multiple realisations)
+    '''
         
     rowdict = {'nRuns': 0.0,'nCivilisations':0.0,'innerGHZ':0.0,'outerGHZ':0.0,'rScale':0.0,'zMin':0.0, 'Zmax':0.0,
             'meanLifetime':0.0,'sdLifetime':0.0,'meanArrival':0.0,'sdArrival':0.0}
         
+    print '---'
     for line in open(paramfile,'r'):
         
         data = line.split()
         key = data[0]
         
-        rowdict[key] = data[1]            
+        rowdict[key] = data[1]
         
+        print key,' \t',rowdict[key]
+                    
+    print '---'
         
     nruns = int(rowdict['nRuns'])
     nciv = int(rowdict['nCivilisations'])

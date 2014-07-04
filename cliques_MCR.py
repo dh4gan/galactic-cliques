@@ -7,32 +7,17 @@ import galaxy as gal
 import params
 import numpy as np
 import matplotlib.pyplot as plt
+from sys import argv
 
-# Parameters that are fixed for all runs
-# 
-# nruns = 30
-# iseed = -47
-# 
-# nciv = 500
-# 
-# rinner = 6.0
-# router = 10.0
-# rscale = 3.0
-# 
-# zmin = -3.0
-# zmax = 3.0
-# 
-# mu_life = 0.1
-# sigma_life = 1.0e-3
-# 
-# mu_t = 5000.0
-# sigma_t = 10.0
+# Read in input parameters from file
 
-paramfile = 'cliques_MCR.params'
-
+if len(argv)==1:
+    paramfile = raw_input("Enter the parameter file: ")
+elif len(argv)==2:
+    paramfile = argv[1]
+        
 nruns,nciv, rinner,router,rscale, zmin,zmax, mu_life,sigma_life,mu_t,sigma_t = params.read_parameters_mcr(paramfile)
 
-print nciv, rinner,router,rscale, zmin,zmax, mu_life,sigma_life,mu_t,sigma_t
 iseed = -47
 
 # Now loop over runs
@@ -98,6 +83,7 @@ for irun in range(nruns):
 print 'MCR complete - now producing means and standard deviations'
 
 
+# Groups with a single member have zero size - remove them
 mcr_groupsizes = mcr_groupsizes[np.nonzero(mcr_groupsizes)]
 
 mean_ngroups = np.mean(mcr_ngroups)
@@ -107,16 +93,22 @@ print mean_ngroups, sd_ngroups
 
 fig1 = plt.figure(1)
 ax = fig1.add_subplot(111)
-ax.hist(mcr_groupcounts, bins=100)
+ax.set_ylabel('Relative Frequency')
+ax.set_xlabel('Group Population')
+ax.hist(mcr_groupcounts, bins=100, normed=True)
 plt.show()
 
 fig1 = plt.figure(1)
 ax = fig1.add_subplot(111)
+ax.set_ylabel('Relative Frequency')
+ax.set_xlabel('Group Size (kpc)')
 ax.hist(mcr_groupsizes, bins=100)
 plt.show()
 
 fig1 = plt.figure(1)
 ax = fig1.add_subplot(111)
+ax.set_ylabel('Relative Frequency')
+ax.set_xlabel('Group Arrival Time (Myr)')
 ax.hist(mcr_grouparrive, bins=100)
 plt.show()
   
