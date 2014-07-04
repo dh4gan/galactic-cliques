@@ -29,7 +29,7 @@ mcr_grouparrive = np.empty(0)
 
 for irun in range(nruns):
 
-    print 'Beginning run ', irun
+    print 'Beginning run ', irun+1
     # Generate a galaxy of civilisations
 
     myGalaxy = gal.galaxy(nciv,iseed)
@@ -71,7 +71,7 @@ for irun in range(nruns):
 
     myGalaxy.output_group_statistics(outputfile)
     
-    print 'Run ',irun, ' complete'
+    print 'Run ',irun+1, ' complete'
     
     # Store the data in an array?
     
@@ -86,10 +86,15 @@ print 'MCR complete - now producing means and standard deviations'
 # Groups with a single member have zero size - remove them
 mcr_groupsizes = mcr_groupsizes[np.nonzero(mcr_groupsizes)]
 
+# Calculate means and standard deviations
 mean_ngroups = np.mean(mcr_ngroups)
 sd_ngroups = np.std(mcr_ngroups)
 
-print mean_ngroups, sd_ngroups
+mean_groupsize = np.mean(mcr_groupsizes)
+sd_groupsize = np.std(mcr_groupsizes)
+
+mean_grouparrive = np.mean(mcr_grouparrive)
+sd_grouparrive = np.std(mcr_grouparrive)
 
 fig1 = plt.figure(1)
 ax = fig1.add_subplot(111)
@@ -112,8 +117,24 @@ ax.set_xlabel('Group Arrival Time (Myr)')
 ax.hist(mcr_grouparrive, bins=100)
 plt.show()
   
+# Write MCR data to output file
 
+outputfile = 'output.MCR'
 
+print 'Outputting to file ', outputfile
 
+f_obj = open(outputfile,'w')
+
+line = 'Nciv  meanLife  sdLife  meanArrive  sdArrive '
+line += 'meanNgroup  sdNgroup  meanGroupSize  sdGroupSize  meanGroupArrive  sdGroupArrive \n'
+
+f_obj.write(line)
+
+line = str(nciv)+'\t'+str(mu_life)+'\t'+str(sigma_life)+'\t'+str(mu_t)+'\t'+str(sigma_t)+'\t'
+line += str(mean_ngroups)+'\t'+str(sd_ngroups)+'\t'+str(mean_groupsize)+'\t'+str(sd_groupsize)+'\t'+str(mean_grouparrive)+'\t'+str(sd_grouparrive)+'\n'
+
+f_obj.write(line)
+
+f_obj.close()
     
 
