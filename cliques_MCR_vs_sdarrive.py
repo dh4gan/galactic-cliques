@@ -144,7 +144,7 @@ for sigma_t in sigma_t_values:
 
     f_obj.write(line)
 
-print "MCR complete for all values of nciv"
+print "MCR complete for all values of sdArrive"
 
 f_obj.close()
     
