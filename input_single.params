@@ -1,10 +1,10 @@
-nCivilisations 		10000
+nCivilisations 		100
 innerGHZ		6.0
 outerGHZ		10.0
 rScale			3.0
 zMin			-3.0
 zMax			3.0
-meanLifetime		0.1
-sdLifetime		1.0e-3
+meanLifetime		1.0
+sdLifetime		1.0e-1
 meanArrival		5000.0
 sdArrival		10.0
