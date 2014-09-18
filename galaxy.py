@@ -161,7 +161,7 @@ class galaxy(object):
                            
         # Now sort this (retrieving order of sort)
         
-        print 'Sorting civilisations by arrival time'
+        #print 'Sorting civilisations by arrival time'
         
         order = np.argsort(times)
         
@@ -171,13 +171,13 @@ class galaxy(object):
         
         
         # Regenerate civs array in correct order using sort
-        print 'New order found: shuffling civilisations'
+        #print 'New order found: shuffling civilisations'
         self.civs = []
         
         for i in range(self.N):
         # Use this to generate the sorted civilisations array
             self.civs.append(newcivs[order[i]])  
-        print 'Civilisations shuffled'
+        #print 'Civilisations shuffled'
             
     def check_for_groups(self):
         '''
@@ -187,7 +187,7 @@ class galaxy(object):
         
         # Civilisation that arrives first starts its own group
         
-        print 'Checking for groups'
+        #print 'Checking for groups'
         
         self.civs[0].groupleader = 1    
         
@@ -198,7 +198,7 @@ class galaxy(object):
             
             percent = 100.0*float(i)/float(self.N)
             if(percent > counter):
-                print counter, "% complete"
+                #print counter, "% complete"
                 counter +=10      
             
             for j in range(i+1,self.N):
@@ -228,7 +228,7 @@ class galaxy(object):
                     
                 #print i, j, sep,dt, self.civs[i].groupleader, self.civs[j].groupleader
                 
-        print 'Group checking complete'
+        #print 'Group checking complete'
                 
     def count_groups(self):
         '''
@@ -238,7 +238,7 @@ class galaxy(object):
         
         self.groupmax = 0                            
         
-        print 'Counting groups'
+        #print 'Counting groups'
         # Firstly, find the maximum possible number of groups
         for civ in self.civs:
             if(civ.groupleader > self.groupmax): self.groupmax = civ.groupleader
