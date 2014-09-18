@@ -23,12 +23,15 @@ nruns,nciv, rinner,router,rscale, zmin,zmax, mu_life,sigma_life,mu_t,sigma_t = p
 iseed = -47
 
 # Override definitions of mu_life, sigma_life, specify the values to be explored
+nmu = 10
+mu_life_values = np.linspace(0.01, 5.0, num=nmu)
 
-mu_life_values = [0.01, 0.05, 0.1, 0.5, 1.0, 5.0]
-nmu = len(mu_life_values)
+nsigma = 10
+sigma_life_values = np.linspace(1.0e-3,1.0e-1, num=nsigma)
 
-sigma_life_values = [1.0e-3, 5.0e-3, 1.0e-2, 5.0e-2, 1.0e-1]
-nsigma = len(sigma_life_values)
+print "Surveying following parameter space:"
+print "mu: \n",mu_life_values
+print "sigma: \n",sigma_life_values
 
 # Arrays to hold values of outputs for plotting
 
@@ -48,10 +51,10 @@ outputfile = 'output.MCR'
 plot_instead = "n"
 
 if(isfile(outputfile)):
-    plot_instead = raw_input("Outputfile "+ outputfile+ " detected - do you want to skip calculation and plot this instead?")
+    plot_instead = raw_input("Outputfile "+ outputfile+ " detected - do you want to skip calculation and plot this instead? ")
 
 if plot_instead=="n":
-    print 'Outputting to file ', outputfile
+    print 'Outputting to new file ', outputfile
 
     f_obj = open(outputfile,'w')
 
