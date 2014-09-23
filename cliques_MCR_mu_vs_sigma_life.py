@@ -23,11 +23,11 @@ nruns,nciv, rinner,router,rscale, zmin,zmax, mu_life,sigma_life,mu_t,sigma_t = p
 iseed = -47
 
 # Override definitions of mu_life, sigma_life, specify the values to be explored
-nmu = 10
+nmu = 100
 mu_life_values = np.linspace(0.01, 5.0, num=nmu)
 
-nsigma = 10
-sigma_life_values = np.linspace(1.0e-3,1.0e-1, num=nsigma)
+nsigma = 100
+sigma_life_values = np.linspace(1.0e-2,1.0e-1, num=nsigma)
 
 print "Surveying following parameter space:"
 print "mu: \n",mu_life_values
@@ -211,7 +211,7 @@ if(plot_instead=="y"):
     f_obj.close()
 # Now Plot data
 
-contourlevels = [10,50,100,150,200,250]
+contourlevels = [1,2,5,10,50,100,150,200,250,300,350,400,450,500]
 
 fig1 = plt.figure()
 ax = fig1.add_subplot(111)
