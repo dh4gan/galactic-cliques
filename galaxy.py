@@ -112,6 +112,9 @@ class galaxy(object):
         tmin = mu - 3.0*sigma
         tmax = mu + 3.0*sigma
         
+	if tmin < 0.0:
+	   tmin = 0.0
+
         for civ in self.civs:
             accept = False
             while accept==False:

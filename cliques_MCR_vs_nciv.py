@@ -23,7 +23,7 @@ iseed = -47
 
 # Override definition of nciv, and specify the nciv values to be explored
 
-nciv_values = [10, 50, 100, 500, 1000]
+nciv_values = np.arange(10,5000,step=10,dtype=int)
 
 # Set up MCR output file
 
@@ -114,26 +114,26 @@ for nciv in nciv_values:
     mean_grouparrive = np.mean(mcr_grouparrive)
     sd_grouparrive = np.std(mcr_grouparrive)
 
-    fig1 = plt.figure(1)
-    ax = fig1.add_subplot(111)
-    ax.set_ylabel('Relative Frequency')
-    ax.set_xlabel('Group Population')
-    ax.hist(mcr_groupcounts, bins=100, normed=True)
-    plt.show()
-
-    fig1 = plt.figure(1)
-    ax = fig1.add_subplot(111)
-    ax.set_ylabel('Relative Frequency')
-    ax.set_xlabel('Group Size (kpc)')
-    ax.hist(mcr_groupsizes, bins=100)
-    plt.show()
-
-    fig1 = plt.figure(1)
-    ax = fig1.add_subplot(111)
-    ax.set_ylabel('Relative Frequency')
-    ax.set_xlabel('Group Arrival Time (Myr)')
-    ax.hist(mcr_grouparrive, bins=100)
-    plt.show()
+#     fig1 = plt.figure(1)
+#     ax = fig1.add_subplot(111)
+#     ax.set_ylabel('Relative Frequency')
+#     ax.set_xlabel('Group Population')
+#     ax.hist(mcr_groupcounts, bins=100, normed=True)
+#     plt.show()
+# 
+#     fig1 = plt.figure(1)
+#     ax = fig1.add_subplot(111)
+#     ax.set_ylabel('Relative Frequency')
+#     ax.set_xlabel('Group Size (kpc)')
+#     ax.hist(mcr_groupsizes, bins=100)
+#     plt.show()
+# 
+#     fig1 = plt.figure(1)
+#     ax = fig1.add_subplot(111)
+#     ax.set_ylabel('Relative Frequency')
+#     ax.set_xlabel('Group Arrival Time (Myr)')
+#     ax.hist(mcr_grouparrive, bins=100)
+#     plt.show()
   
     # Write MCR data to output file
 

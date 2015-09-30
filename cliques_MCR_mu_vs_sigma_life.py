@@ -7,6 +7,7 @@
 import galaxy as gal
 import params
 import numpy as np
+import scipy.ndimage as ndimage
 import matplotlib.pyplot as plt
 from sys import argv
 from os.path import isfile
@@ -24,10 +25,10 @@ iseed = -47
 
 # Override definitions of mu_life, sigma_life, specify the values to be explored
 nmu = 100
-mu_life_values = np.linspace(0.01, 5.0, num=nmu)
+mu_life_values = np.linspace(0.001, 5.0, num=nmu)
 
 nsigma = 100
-sigma_life_values = np.linspace(1.0e-2,1.0e-1, num=nsigma)
+sigma_life_values = np.linspace(1.0e-1,1.0e0, num=nsigma)
 
 print "Surveying following parameter space:"
 print "mu: \n",mu_life_values
@@ -69,8 +70,11 @@ if plot_instead=="n":
     for mu_life in mu_life_values:
 
         isigma = 0
-        for sigma_life in sigma_life_values:
-        
+        for sigma_lifefrac in sigma_life_values:
+            
+            sigma_life = sigma_lifefrac*mu_life
+            #sigma_life = sigma_lifefrac
+
             # Now loop over runs
 
             mcr_ngroups = np.empty(0)
@@ -97,8 +101,8 @@ if plot_instead=="n":
 
                 # Distribution of civilisation lifetimes
 
-                myGalaxy.generate_fixed_lifetimes(mu_life)
-                #myGalaxy.generate_gaussian_lifetimes(mu_life, sigma_life)
+                #myGalaxy.generate_fixed_lifetimes(mu_life)
+                myGalaxy.generate_gaussian_lifetimes(mu_life, sigma_life)
 
                 # Arrange civilisations by arrival time and construct groups
 
@@ -178,25 +182,41 @@ if(plot_instead=="y"):
     # Read header line
     
     line = f_obj.readline()
-
-    for imu in range(nmu):
-        isigma = 0
-        
-        for isigma in range(nsigma):
     
-            # Read line, break up into individual values
+    imu = 0
+    isigma = 0
+    
+    with open(outputfile) as f_obj:
+        for line in f_obj:
+    
             
-            line = f_obj.readline()
+            if '#' in line: continue
+            if 'Nciv' in line: continue
+    
+            isigma = isigma +1
+            
+            if(isigma > nsigma-1):
+                imu = imu+1
+                isigma = 0
+    #for imu in range(nmu):
+    #    isigma = 0
+        
+    #    for isigma in range(nsigma):
+    
+    #        # Read line, break up into individual values
+            
+    #        line = f_obj.readline()
             
             values = str.split(line)
             
+            print imu, isigma, values
             # Add data to output arrays
             
-            if(float(values[1])!=mu_life_values[imu]):
-                print "WARNING: mu mismatch: ", values[1], mu_life_values[imu]
+            #if(float(values[1])!=mu_life_values[imu]):
+            #    print "WARNING: mu mismatch: ", values[1], mu_life_values[imu]
             
-            if(float(values[2])!=sigma_life_values[isigma]):
-                print "WARNING: sigma mismatch: ", values[2], sigma_life_values[isigma]
+            #if(float(values[2])!=sigma_life_values[isigma]):
+            #    print "WARNING: sigma mismatch: ", values[2], sigma_life_values[isigma]
                 
             mean_group_values[imu,isigma] = float(values[5])
             sd_group_values[imu,isigma] = float(values[6])
@@ -211,16 +231,22 @@ if(plot_instead=="y"):
     f_obj.close()
 # Now Plot data
 
-contourlevels = [1,2,5,10,50,100,150,200,250,300,350,400,450,500]
+mean_group_values = mean_group_values.astype(int)
+
+contourlevels = [1,10,50,100,150,200,300,400,450,490,500]
 
 fig1 = plt.figure()
 ax = fig1.add_subplot(111)
-ax.set_xlabel('$\mu$')
-ax.set_ylabel('$\sigma$')
+ax.set_xlabel('$\mu_{Life}$ (Myr)')
+ax.set_ylabel('$\sigma_{Life}$ (Myr)')
 ax.set_xscale('log')
 ax.set_yscale('log')
-cs = ax.contour(mu_life_values,sigma_life_values, mean_group_values.transpose(), levels=contourlevels)
+ax.set_xlim(1.0e-1,5.0e0)
+cs = ax.contour(mu_life_values,sigma_life_values, mean_group_values.transpose(), levels=contourlevels, colors='k')
 ax.clabel(cs,contourlevels)
-plt.savefig('contour.png', format='png')   
+fig1.savefig('contour.png', format='png')
+
+
+   
 
 
