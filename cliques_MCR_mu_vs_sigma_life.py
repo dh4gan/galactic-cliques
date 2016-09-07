@@ -196,8 +196,11 @@ if(plot_instead=="y"):
             isigma = isigma +1
             
             if(isigma > nsigma-1):
-                imu = imu+1
+                imu = imu+1            
                 isigma = 0
+                
+            if(imu>nmu-1):
+                break
     #for imu in range(nmu):
     #    isigma = 0
         
@@ -233,6 +236,8 @@ if(plot_instead=="y"):
 
 mean_group_values = mean_group_values.astype(int)
 
+print mean_group_values
+
 contourlevels = [1,10,50,100,150,200,300,400,450,490,500]
 
 fig1 = plt.figure()
@@ -242,6 +247,9 @@ ax.set_ylabel('$\sigma_{Life}$ (Myr)')
 ax.set_xscale('log')
 ax.set_yscale('log')
 ax.set_xlim(1.0e-1,5.0e0)
+#plt.hexbin(mu_life_values,sigma_life_values,C=mean_group_values.transpose(),gridsize = int(nmu*0.01), xscale='log',yscale='log',mincnt = 1)    
+#cb = plt.colorbar()
+#cb.set_label('Mean Group Number', fontsize=20)
 cs = ax.contour(mu_life_values,sigma_life_values, mean_group_values.transpose(), levels=contourlevels, colors='k')
 ax.clabel(cs,contourlevels)
 fig1.savefig('contour.png', format='png')
